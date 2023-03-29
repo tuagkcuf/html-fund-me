@@ -9,18 +9,7 @@
     <body>
         <button id="connect-btn" onclick="connect()">Connect</button>
         <button>Execute</button>
-        <script>
-            async function connect() {
-                if (typeof window.ethereum !== "undefined") {
-                    await window.ethereum.request({
-                        method: "eth_requestAccounts",
-                    });
-                    document.getElementById("connect-btn").innerHTML =
-                        "Connec ted";
-                } else {
-                    console.log("No metamask");
-                }
-            }
+        <script src="./index.js" type="text/javascript">
         </script>
     </body>
 </html>
