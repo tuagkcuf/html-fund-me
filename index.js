@@ -25,13 +25,27 @@ async function fund() {
     if (typeof window.ethereum !== "undefined") {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
-        const contract = new ethers.Contract(
-            contractAddress,
-            abi,
-            signer
-        )
-        const transactionResponse = await contract.fund({
-            value: ethers.utils.parseEther(ethAmount),
-        })
+        const contract = new ethers.Contract(contractAddress, abi, signer)
+        try {
+            const transactionResponse = await contract.fund({
+                value: ethers.utils.parseEther(ethAmount),
+            })
+            await listenForTransactionMine(transactionResponse, provider)
+            console.log("done")
+        } catch (error) {
+            console.log(error)
+        }
     }
+}
+
+function listenForTransactionMine(transactionResponse, provider) {
+    console.log(`Mining ${transactionResponse.hash}...`)
+    return new Promise((resolve, reject) => {
+        provider.once(transactionResponse.hash, (transactionReceipt) => {
+            console.log(
+                `Completed with ${transactionReceipt.confirmations} confirmations`
+            )
+        })
+        resolve()
+    })
 }
